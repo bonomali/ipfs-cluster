@@ -9,7 +9,8 @@ import (
 
 var cfgJSON = []byte(`
 {
-      "check_interval": "15s"
+      "check_interval": "15s",
+	  "failure_threshold": 2.0
 }
 `)
 
@@ -53,17 +54,23 @@ func TestDefault(t *testing.T) {
 	}
 
 	cfg.CheckInterval = 0
+	cfg.FailureThreshold = -0.1
 	if cfg.Validate() == nil {
 		t.Fatal("expected error validating")
 	}
+
 }
 
 func TestApplyEnvVars(t *testing.T) {
 	os.Setenv("CLUSTER_MONBASIC_CHECKINTERVAL", "22s")
+	os.Setenv("CLUSTER_MONBASIC_FAILURETHRESHOLD", "4.0")
 	cfg := &Config{}
 	cfg.ApplyEnvVars()
 
 	if cfg.CheckInterval != 22*time.Second {
 		t.Fatal("failed to override check_interval with env var")
+	}
+	if cfg.FailureThreshold != 4.0 {
+		t.Fatal("failed to override failure_threshold with env var")
 	}
 }

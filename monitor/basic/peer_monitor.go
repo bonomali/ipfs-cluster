@@ -50,7 +50,7 @@ func NewMonitor(cfg *Config) (*Monitor, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	mtrs := metrics.NewStore()
-	checker := metrics.NewChecker(mtrs)
+	checker := metrics.NewChecker(mtrs, cfg.FailureThreshold)
 
 	mon := &Monitor{
 		ctx:      ctx,

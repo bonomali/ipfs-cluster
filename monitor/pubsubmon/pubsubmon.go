@@ -59,7 +59,7 @@ func New(h host.Host, cfg *Config) (*Monitor, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	mtrs := metrics.NewStore()
-	checker := metrics.NewChecker(mtrs)
+	checker := metrics.NewChecker(mtrs, cfg.FailureThreshold)
 
 	pubsub, err := pubsub.NewGossipSub(ctx, h)
 	if err != nil {
